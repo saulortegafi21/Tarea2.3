@@ -120,6 +120,50 @@ class Linea{
             return message;
         }
 
+        // Sobrecarga para el operador ==
+        bool operator==(const Linea& linea) const {
+            return this->year == linea.year &&
+                this->monthDigit == linea.monthDigit &&
+                this->day == linea.day &&
+                this->hour == linea.hour &&
+                this->minute == linea.minute &&
+                this->second == linea.second;
+        }
+
+        // Sobrecarga para el operador >=
+        bool operator>=(const Linea& linea) const {
+            if (this->year > linea.year) {
+                return true;
+            }
+            else if (this->year == linea.year) {
+                if (this->monthDigit > linea.monthDigit) {
+                    return true;
+                }
+                else if (this->monthDigit == linea.monthDigit) {
+                    if (this->day > linea.day) {
+                        return true;
+                    }
+                    else if (this->day == linea.day) {
+                        if (this->hour > linea.hour) {
+                            return true;
+                        }
+                        else if (this->hour == linea.hour) {
+                            if (this->minute > linea.minute) {
+                                return true;
+                            }
+                            else if (this->minute == linea.minute) {
+                                if (this->second >= linea.second) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+
         //Sobrecarga para operador <=
         bool operator<=(const Linea& linea){
             if(this->year < linea.year){
@@ -232,20 +276,23 @@ class List{
             file.close();
         }
 
-        void imprimirRango(Linea fechaInicio, Linea fechaFinal){
+        void imprimirRango(Linea fechaInicio, Linea fechaFinal) {
             Node<T>* current = head;
-            while(current != nullptr){
-                //Imprimir Fecha
-                cout << current->linea.getYear() << " " << current->linea.getMonth() << " " << setw(2) << setfill('0') << current->linea.getDay() << " ";
+            while (current != nullptr) {
+                if (current->linea >= fechaInicio && current->linea <= fechaFinal) {
+                    //Imprimir Fecha
+                    cout << current->linea.getYear() << " " << current->linea.getMonth() << " " << setw(2) << setfill('0') << current->linea.getDay() << " ";
 
-                //Imprimir Hora
-                cout << setw(2) << setfill('0') << current->linea.getHour() << ":"<< setw(2) << setfill('0')  << current->linea.getMinute() << ":" ;
+                    //Imprimir Hora
+                    cout << setw(2) << setfill('0') << current->linea.getHour() << ":" << setw(2) << setfill('0') << current->linea.getMinute() << ":";
 
-                //Imprimir IP y mensaje
-                cout << setw(2) << setfill('0')  << current->linea.getSecond() << " | IP: " << current->linea.getIp() << " | INFO: " << current->linea.getMessage() << endl;
+                    //Imprimir IP y mensaje
+                    cout << setw(2) << setfill('0') << current->linea.getSecond() << " | IP: " << current->linea.getIp() << " | INFO: " << current->linea.getMessage() << endl;
+                }
                 current = current->next;
             }
         }
+
 
         Node<T> *split(Node<T> *head){
             Node<T> *slow = head;
